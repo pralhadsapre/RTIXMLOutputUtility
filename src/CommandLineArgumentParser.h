@@ -32,13 +32,13 @@ void CommandLineArguments_initialize(struct CommandLineArguments *cmd_args);
 
 void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args);
 
-RTI_Retval parse_arguments(
+RTI_Retval CommandLineArgumentParser_parse_arguments(
         int argc, 
         char *argv[], 
         struct CommandLineArguments *output_values);
 
-void print_help();
+void CommandLineArgumentParser_print_help();
 
-void print_arguments(struct CommandLineArguments *values);
+void CommandLineArgumentParser_print_arguments(struct CommandLineArguments *values);
 
 #endif /* commandlineargumentparser_h */
