@@ -15,7 +15,8 @@
 #include <string.h>
 #include "Common.h"
 
-RTI_Retval Common_allocate_string(char **out_dest, size_t length) {
+RTI_Retval Common_allocate_string(char **out_dest, size_t length) 
+{
     RTI_Retval result = ERROR;
 
     /* calloc necessary along with length + 1 for correctly terminating C strings */
@@ -29,7 +30,8 @@ done:
     return result;
 }
 
-RTI_Retval Common_allocate_and_copy_string(char **out_dest, char *src) {
+RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) 
+{
     RTI_Retval result = ERROR;
 
     if (Common_allocate_string(out_dest, strlen(src)) != OK) {

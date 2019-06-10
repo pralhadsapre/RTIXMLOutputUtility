@@ -18,7 +18,7 @@ typedef enum Retval {
     ERROR
 } RTI_Retval;
 
-RTI_Retval Common_allocate_and_copy_string(char **out_dest, char *src);
+RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src);
 
 RTI_Retval Common_allocate_string(char **out_dest, size_t length);
 
