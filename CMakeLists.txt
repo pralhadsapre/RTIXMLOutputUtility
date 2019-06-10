@@ -44,9 +44,3 @@ target_link_libraries(RTI_XMLOutputUtility
     RTIConnextDDS::c_api
     RTIConnextDDS::routing_service_c
     rtixml2)
-
-add_custom_command(
-    TARGET RTI_XMLOutputUtility POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_SOURCE_DIR}/helper_script/formatter.py
-            ${CMAKE_CURRENT_BINARY_DIR}/formatter.py)
