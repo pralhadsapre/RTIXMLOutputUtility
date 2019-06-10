@@ -2,7 +2,9 @@
 A command line utility to output final XML values provided by a QoS Profile for the RTI Connext DDS Pro product.
 
 ## Purpose
-In the RTI Connext DDS Pro product an application can be configured using an XML QoS (Quality of Service) configuration file. With the v6.0.0 release of the product we have added features like XML Multiple Inheritance to allow greater reusability and flexibility for the users. This tool is intended to help with that. It allows developers to see what the final values for XML will be when an entity is created by pointing at a <qos_profile>. The utility also allows developers to see the value of a subtag within one of the standard <xxx_qos> tags by using the '/' separator
+In the RTI Connext DDS Pro product an application can be configured using an XML QoS (Quality of Service) configuration file. With the v6.0.0 release of the product we have added features like XML Multiple Inheritance to allow greater reusability and flexibility for the users. This tool is intended to help with that. 
+
+It allows developers to see what the final values (post resolution of inheritance) for XML QoS will be when an entity is created by pointing at a <qos_profile>. The utility also allows developers to see the value of a subtag within one of the standard <xxx_qos> tags by using the '/' separator.
 
 ## Compiling
 The tool has the following dependencies
