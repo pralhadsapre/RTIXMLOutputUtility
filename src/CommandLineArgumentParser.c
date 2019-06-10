@@ -21,7 +21,7 @@ const char *CMD_ARG_HELP[3] = {
         ""};
 const char *CMD_ARG_USER_FILE[3] = {
         "-qosFile", 
-        "Absolute path of the QoS XML configuration file you want to analyse", 
+        "Absolute path of the QoS XML configuration file you want to analyze", 
         "OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded"};
 const char *CMD_ARG_OUTPUT_FILE[3] = {
         "-outputFile", 
