@@ -14,7 +14,6 @@
 #define xmlhelper_h
 
 #include "Common.h"
-#include "ndds/ndds_c.h"
 
 #define INDENTATION_UNIT "    "
 
@@ -28,7 +27,6 @@ RTI_Retval XMLHelper_insert_enclosing_tag(
 
 RTI_Retval XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -36,7 +34,6 @@ RTI_Retval XMLHelper_dump_datawriter_qos(
 
 RTI_Retval XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -44,7 +41,6 @@ RTI_Retval XMLHelper_dump_datareader_qos(
 
 RTI_Retval XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -52,21 +48,18 @@ RTI_Retval XMLHelper_dump_topic_qos(
 
 RTI_Retval XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);
 
 RTI_Retval XMLHelper_dump_subscriber_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);
 
 RTI_Retval XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);

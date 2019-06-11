@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Common.h"
 #include "CommandLineArgumentParser.h"
 #include "XMLHelper.h"
 
@@ -27,7 +26,6 @@ void RTI_XMLOutputUtility_invoke_formatting_helper(char *file_name)
 
 RTI_Retval RTI_XMLOutputUtility_process_arguments(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         struct CommandLineArguments *cmd_args, 
         struct RTIXMLSaveContext *xml_save_context) 
 {
@@ -36,7 +34,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     if (!strcmp("datareader_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_datareader_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
@@ -46,7 +43,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     } else if(!strcmp("datawriter_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_datawriter_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
@@ -56,7 +52,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     } else if(!strcmp("topic_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_topic_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
@@ -66,7 +61,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     } else if(!strcmp("publisher_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_publisher_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 xml_save_context) != OK) {
@@ -75,7 +69,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     } else if(!strcmp("subscriber_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_subscriber_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 xml_save_context) != OK) {
@@ -84,7 +77,6 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
     } else if(!strcmp("participant_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_participant_qos(
                 factory, 
-                dummy_participant, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 xml_save_context) != OK) {
@@ -100,7 +92,7 @@ int main(int argc, char *argv[])
 {
     struct RTIXMLSaveContext xml_save_context = RTIXMLSaveContext_INITIALIZER;
     DDS_DomainParticipantFactory *factory = DDS_TheParticipantFactory;
-    DDS_DomainParticipant *dummy_participant = NULL;
+    struct DDS_XMLObject *root = NULL, *default_profile = NULL;
     struct DDS_DomainParticipantFactoryQos dpf_qos = DDS_DomainParticipantFactoryQos_INITIALIZER;
     struct CommandLineArguments cmd_args;
     char *user_qos_profile_file = NULL;
@@ -141,13 +133,36 @@ int main(int argc, char *argv[])
     }
 
     if (cmd_args.qos_library == NULL || cmd_args.qos_profile == NULL) {
-        dummy_participant = XMLHelper_create_dummy_participant(factory);
+        root = DDS_QosProvider_get_xml_root(
+                DDS_DomainParticipantFactory_get_qos_providerI(factory));
+        if (root != NULL) {
+            default_profile = (struct DDS_XMLObject *) DDS_XMLDds_get_default_qos_profile(
+                    (struct DDS_XMLDds *) root);
+            if (default_profile != NULL) {
+                cmd_args.qos_library = 
+                        DDS_String_dup(
+                                DDS_XMLObject_get_name(
+                                        DDS_XMLObject_get_parent(default_profile)));
+                cmd_args.qos_profile = 
+                        DDS_String_dup(
+                                DDS_XMLObject_get_name(default_profile));
+                printf("The default <qos_profile> detected was '%s::%s'! \n", 
+                        cmd_args.qos_library, 
+                        cmd_args.qos_profile);
+            } else {
+                printf("There is no <qos_profile> marked with is_default_qos=\"true\", "
+                        "getting the default QoS values for <%s> now! \n", 
+                        cmd_args.qos_type);
+            }
+        } else {
+            printf("Failed to get the root of the DOM tree! \n");
+            goto done;
+        }
     }
 
     while (1) {
         if (RTI_XMLOutputUtility_process_arguments(
                 factory, 
-                dummy_participant, 
                 &cmd_args, 
                 &xml_save_context) != OK) {
             printf("The processing of arguments failed! \n");
@@ -187,15 +202,7 @@ int main(int argc, char *argv[])
 
     result = OK;
 done:
-    free(user_qos_profile_file);
-    if (dummy_participant != NULL) {
-        if (DDS_DomainParticipantFactory_delete_participant(
-                    factory, 
-                    dummy_participant) != DDS_RETCODE_OK) {
-            printf("Failed to delete the dummy participant! \n");
-            result = ERROR;
-        }
-    }
+    DDS_String_free(user_qos_profile_file);
 
     if (xml_save_context.fout != NULL) {
         printf("File '%s' save successfully! \n", cmd_args.output_file);
@@ -203,7 +210,7 @@ done:
     }
 
     if (xml_save_context.sout != NULL) {
-        free(xml_save_context.sout);
+        DDS_String_free(xml_save_context.sout);
     }
 
     CommandLineArguments_finalize(&cmd_args);

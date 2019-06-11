@@ -125,29 +125,8 @@ done:
     return result;
 }
 
-/* 
- * Useful when when no library_name or profile_name is specified and we want 
- * to identify a <qos_profile> with a is_default_qos="true" value.
- */
-DDS_DomainParticipant* XMLHelper_create_dummy_participant(
-        DDS_DomainParticipantFactory *factory) 
-{
-    DDS_DomainParticipant *dummy_participant = NULL;
-    dummy_participant = DDS_DomainParticipantFactory_create_participant(
-            factory, 
-            0, /* Domain ID */
-            &DDS_PARTICIPANT_QOS_DEFAULT, 
-            NULL /* Listener */, 
-            DDS_STATUS_MASK_NONE);
-    if (dummy_participant == NULL) {
-        printf("Failed to create the dummy participant! \n");
-    }
-    return dummy_participant;
-}
-
 RTI_Retval XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -158,17 +137,9 @@ RTI_Retval XMLHelper_dump_datawriter_qos(
 
     XMLHelper_insert_enclosing_tag("datawriter_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        if (dummy_participant == NULL) {
+        if (DDS_DataWriterQos_get_defaultI(&datawriter_qos) != DDS_RETCODE_OK) {
+            printf("Failed to get the default values for <datawriter_qos>! \n");
             goto done;
-        } else {
-            if (DDS_DomainParticipant_get_default_datawriter_qos_w_topic_name(
-                        dummy_participant, 
-                        &datawriter_qos, 
-                        topic_name) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <datawriter_qos> values for topic name %s! \n",  
-                        topic_name);
-                goto done;
-            }
         }
     } else {
         if (DDS_DomainParticipantFactory_get_datawriter_qos_from_profile_w_topic_name(
@@ -203,7 +174,6 @@ done:
 
 RTI_Retval XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -214,17 +184,9 @@ RTI_Retval XMLHelper_dump_datareader_qos(
 
     XMLHelper_insert_enclosing_tag("datareader_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        if (dummy_participant == NULL) {
+        if (DDS_DataReaderQos_get_defaultI(&datareader_qos) != DDS_RETCODE_OK) {
+            printf("Failed to get the default values for <datareader_qos>! \n");
             goto done;
-        } else {
-            if (DDS_DomainParticipant_get_default_datareader_qos_w_topic_name(
-                        dummy_participant, 
-                        &datareader_qos, 
-                        topic_name) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <datareader_qos> values for topic name %s! \n",  
-                        topic_name);
-                goto done;
-            }
         }
     } else {
         if (DDS_DomainParticipantFactory_get_datareader_qos_from_profile_w_topic_name(
@@ -259,7 +221,6 @@ done:
 
 RTI_Retval XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         char *topic_name, 
@@ -270,18 +231,9 @@ RTI_Retval XMLHelper_dump_topic_qos(
 
     XMLHelper_insert_enclosing_tag("topic_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        dummy_participant = XMLHelper_create_dummy_participant(factory);
-        if (dummy_participant == NULL) {
+        if (DDS_TopicQos_get_defaultI(&topic_qos) != DDS_RETCODE_OK) {
+            printf("Failed to get the default values for <topic_qos>! \n");
             goto done;
-        } else {
-            if (DDS_DomainParticipant_get_default_topic_qos_w_topic_name(
-                        dummy_participant, 
-                        &topic_qos, 
-                        topic_name) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <topic_qos> values for topic name %s! \n",  
-                        topic_name);
-                goto done;
-            }
         }
     } else {
         if (DDS_DomainParticipantFactory_get_topic_qos_from_profile_w_topic_name(
@@ -311,7 +263,6 @@ done:
 
 RTI_Retval XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
@@ -321,16 +272,7 @@ RTI_Retval XMLHelper_dump_publisher_qos(
 
     XMLHelper_insert_enclosing_tag("publisher_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        if (dummy_participant == NULL) {
-            goto done;
-        } else {
-            if (DDS_DomainParticipant_get_default_publisher_qos(
-                        dummy_participant, 
-                        &publisher_qos) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <publisher_qos> values! \n");
-                goto done;
-            }
-        }
+        DDS_PublisherQos_get_defaultI(&publisher_qos);
     } else {
         if (DDS_DomainParticipantFactory_get_publisher_qos_from_profile(
                     factory, 
@@ -362,7 +304,6 @@ done:
 
 RTI_Retval XMLHelper_dump_subscriber_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
@@ -372,17 +313,7 @@ RTI_Retval XMLHelper_dump_subscriber_qos(
 
     XMLHelper_insert_enclosing_tag("subscriber_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        dummy_participant = XMLHelper_create_dummy_participant(factory);
-        if (dummy_participant == NULL) {
-            goto done;
-        } else {
-            if (DDS_DomainParticipant_get_default_subscriber_qos(
-                        dummy_participant, 
-                        &subscriber_qos) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <subscriber_qos> values! \n");
-                goto done;
-            }
-        }
+        DDS_SubscriberQos_get_defaultI(&subscriber_qos);
     } else {
         if (DDS_DomainParticipantFactory_get_subscriber_qos_from_profile(
                     factory, 
@@ -414,7 +345,6 @@ done:
 
 RTI_Retval XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
-        DDS_DomainParticipant *dummy_participant, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
@@ -424,15 +354,9 @@ RTI_Retval XMLHelper_dump_participant_qos(
 
     XMLHelper_insert_enclosing_tag("participant_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
-        if (dummy_participant == NULL) {
+        if (DDS_DomainParticipantQos_get_defaultI(&participant_qos) != DDS_RETCODE_OK) {
+            printf("Failed to get the default values for <participant_qos>! \n");
             goto done;
-        } else {
-            if (DDS_DomainParticipant_get_qos(
-                        dummy_participant, 
-                        &participant_qos) != DDS_RETCODE_OK) {
-                printf("Failed to fetch default <participant_qos> values! \n");
-                goto done;
-            }
         }
     } else {
         if (DDS_DomainParticipantFactory_get_participant_qos_from_profile(
