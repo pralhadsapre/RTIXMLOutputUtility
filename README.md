@@ -12,6 +12,7 @@ The tool has the following dependencies
 2. CMake v3.5 or higher
 
 Here is how you would compile this utility after cloning it
+
 Create a build subdirectory and cd into it
 ```
 mkdir build
