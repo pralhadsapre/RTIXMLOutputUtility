@@ -101,7 +101,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
         char *argv[], 
         struct CommandLineArguments *output_values) 
 {
-    RTI_Retval result = ERROR;
+    RTI_Retval result = RTI_ERROR;
     int i = 1;
 
     while (i < argc) {
@@ -131,7 +131,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_library, 
-                                string_size) != OK) {
+                                string_size) != RTI_OK) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_PROFILE_PATH[0]);
                         goto done;
@@ -148,7 +148,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_profile, 
-                                string_size) != OK) {
+                                string_size) != RTI_OK) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_PROFILE_PATH[0]);
                         goto done;
@@ -176,7 +176,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_type, 
-                                string_size) != OK) {
+                                string_size) != RTI_OK) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -193,7 +193,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->query, 
-                                string_size) != OK) {
+                                string_size) != RTI_OK) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -205,7 +205,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
                 } else {
                     if (Common_allocate_string(
                                 &output_values->qos_type, 
-                                strlen(argv[i + 1])) != OK) {
+                                strlen(argv[i + 1])) != RTI_OK) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -248,7 +248,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
         goto done;
     }
 
-    result = OK;
+    result = RTI_OK;
 done:
     return result;
 }

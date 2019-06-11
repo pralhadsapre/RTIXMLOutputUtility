@@ -16,20 +16,20 @@
 #include "Common.h"
 
 RTI_Retval Common_allocate_string(char **out_dest, size_t length) {
-    RTI_Retval result = ERROR;
+    RTI_Retval result = RTI_ERROR;
 
     *out_dest = DDS_String_alloc(length);
     if (*out_dest == NULL) {
         printf("Not enough memory for string allocation! \n");
         goto done;
     }
-    result = OK;
+    result = RTI_OK;
 done:
     return result;
 }
 
 RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) {
-    RTI_Retval result = ERROR;
+    RTI_Retval result = RTI_ERROR;
 
     *out_dest = DDS_String_dup(src);
     if (out_dest == NULL) {
@@ -37,7 +37,7 @@ RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) {
         goto done;
     }
 
-    result = OK;
+    result = RTI_OK;
 done:
     return result;
 }

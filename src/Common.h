@@ -15,9 +15,9 @@
 
 #include "ndds/ndds_c.h"
 
-typedef enum Retval {
-    OK,
-    ERROR
+typedef enum RTI_Retval {
+    RTI_OK,
+    RTI_ERROR
 } RTI_Retval;
 
 RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src);

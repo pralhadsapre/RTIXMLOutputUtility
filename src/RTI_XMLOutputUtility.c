@@ -29,7 +29,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
         struct CommandLineArguments *cmd_args, 
         struct RTIXMLSaveContext *xml_save_context) 
 {
-    RTI_Retval result = ERROR;
+    RTI_Retval result = RTI_ERROR;
 
     if (!strcmp("datareader_qos", cmd_args->qos_type)) {
         if (XMLHelper_dump_datareader_qos(
@@ -37,7 +37,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     } else if(!strcmp("datawriter_qos", cmd_args->qos_type)) {
@@ -46,7 +46,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     } else if(!strcmp("topic_qos", cmd_args->qos_type)) {
@@ -55,7 +55,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     } else if(!strcmp("publisher_qos", cmd_args->qos_type)) {
@@ -63,7 +63,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     } else if(!strcmp("subscriber_qos", cmd_args->qos_type)) {
@@ -71,7 +71,7 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     } else if(!strcmp("participant_qos", cmd_args->qos_type)) {
@@ -79,11 +79,11 @@ RTI_Retval RTI_XMLOutputUtility_process_arguments(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != OK) {
+                xml_save_context) != RTI_OK) {
             goto done;
         }
     }
-    result = OK;
+    result = RTI_OK;
 done:
     return result;
 }
@@ -96,20 +96,20 @@ int main(int argc, char *argv[])
     struct DDS_DomainParticipantFactoryQos dpf_qos = DDS_DomainParticipantFactoryQos_INITIALIZER;
     struct CommandLineArguments cmd_args;
     char *user_qos_profile_file = NULL;
-    RTI_Retval result = ERROR;
+    RTI_Retval result = RTI_ERROR;
 
     CommandLineArguments_initialize(&cmd_args);
     result = CommandLineArgumentParser_parse_arguments(argc, argv, &cmd_args);
     CommandLineArgumentParser_print_arguments(&cmd_args);
 
-    if (result == ERROR) {
+    if (result == RTI_ERROR) {
         goto done;
     }
 
     if (cmd_args.user_file != NULL) {
         if (Common_allocate_string(
                     &user_qos_profile_file, 
-                    strlen("file://") + strlen(cmd_args.user_file)) != OK) {
+                    strlen("file://") + strlen(cmd_args.user_file)) != RTI_OK) {
             printf("String allocation for file name '%s' failed! \n", 
                     cmd_args.user_file);
             goto done;
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         if (RTI_XMLOutputUtility_process_arguments(
                 factory, 
                 &cmd_args, 
-                &xml_save_context) != OK) {
+                &xml_save_context) != RTI_OK) {
             printf("The processing of arguments failed! \n");
             goto done;
         }
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
         if (xml_save_context.sout == NULL) {
             if (Common_allocate_string(
                     &xml_save_context.sout, 
-                    xml_save_context.outputStringLength) != OK) {
+                    xml_save_context.outputStringLength) != RTI_OK) {
                 printf("Buffer allocation for XML output failed! \n");
                 goto done;
             }
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
                 cmd_args.query);
     }
 
-    result = OK;
+    result = RTI_OK;
 done:
     DDS_String_free(user_qos_profile_file);
 
