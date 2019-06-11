@@ -28,11 +28,11 @@ make
 ```
 You should also add the the location of the lib folder to your PATH (Windows) or DYLD_LIBRARY_PATH (Mac) or LD_LIBRARY_PATH (Linux)
 ```
-export LD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>
+export LD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>:$LD_LIBRARY_PATH
 or 
-export DYLD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>
+export DYLD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>:$DYLD_LIBRARY_PATH
 or 
-set PATH=<RTI Connext DDS installation folder>/lib/<architecture>:%PATH%
+set PATH=<RTI Connext DDS installation folder>/lib/<architecture>;%PATH%
 ```
 
 ## Usage
