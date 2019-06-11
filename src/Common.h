@@ -13,6 +13,8 @@
 #ifndef common_h
 #define common_h
 
+#include "ndds/ndds_c.h"
+
 typedef enum Retval {
     OK,
     ERROR

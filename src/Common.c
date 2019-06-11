@@ -15,12 +15,10 @@
 #include <string.h>
 #include "Common.h"
 
-RTI_Retval Common_allocate_string(char **out_dest, size_t length) 
-{
+RTI_Retval Common_allocate_string(char **out_dest, size_t length) {
     RTI_Retval result = ERROR;
 
-    /* calloc necessary along with length + 1 for correctly terminating C strings */
-    *out_dest = (char *) calloc((length + 1), sizeof(char));
+    *out_dest = DDS_String_alloc(length);
     if (*out_dest == NULL) {
         printf("Not enough memory for string allocation! \n");
         goto done;
@@ -30,16 +28,15 @@ done:
     return result;
 }
 
-RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) 
-{
+RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) {
     RTI_Retval result = ERROR;
 
-    if (Common_allocate_string(out_dest, strlen(src)) != OK) {
+    *out_dest = DDS_String_dup(src);
+    if (out_dest == NULL) {
         printf("Not enough memory for copying string '%s'! \n", src);
         goto done;
     }
 
-    strcpy(*out_dest, src);
     result = OK;
 done:
     return result;
