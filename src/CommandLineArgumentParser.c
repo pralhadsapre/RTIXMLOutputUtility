@@ -88,10 +88,10 @@ void CommandLineArguments_initialize(struct CommandLineArguments *cmd_args)
 void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args)
 {
     cmd_args->output_file = NULL;
-    free(cmd_args->qos_library);
-    free(cmd_args->qos_profile);
-    free(cmd_args->qos_type);
-    free(cmd_args->query);
+    DDS_String_free(cmd_args->qos_library);
+    DDS_String_free(cmd_args->qos_profile);
+    DDS_String_free(cmd_args->qos_type);
+    DDS_String_free(cmd_args->query);
     cmd_args->topic_name = NULL;
     cmd_args->user_file = NULL;
 }
