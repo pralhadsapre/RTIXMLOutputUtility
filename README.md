@@ -26,6 +26,14 @@ Compile (e.g. on Linux systems you would do)
 ```
 make
 ```
+You should also add the the location of the lib folder to your PATH (Windows) or DYLD_LIBRARY_PATH (Mac) or LD_LIBRARY_PATH (Linux)
+```
+export LD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>
+or 
+export DYLD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>
+or 
+set PATH=<RTI Connext DDS installation folder>/lib/<architecture>:%PATH%
+```
 
 ## Usage
 Here are the various options for this utility
