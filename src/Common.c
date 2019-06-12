@@ -15,21 +15,23 @@
 #include <string.h>
 #include "Common.h"
 
-RTI_Retval Common_allocate_string(char **out_dest, size_t length) {
-    RTI_Retval result = RTI_ERROR;
+DDS_Boolean Common_allocate_string(char **out_dest, size_t length) 
+{
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     *out_dest = DDS_String_alloc(length);
     if (*out_dest == NULL) {
         printf("Not enough memory for string allocation! \n");
         goto done;
     }
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     return result;
 }
 
-RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) {
-    RTI_Retval result = RTI_ERROR;
+DDS_Boolean Common_allocate_and_copy_string(char **out_dest, const char *src) 
+{
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     *out_dest = DDS_String_dup(src);
     if (out_dest == NULL) {
@@ -37,7 +39,7 @@ RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src) {
         goto done;
     }
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     return result;
 }

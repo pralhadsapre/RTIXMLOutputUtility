@@ -15,13 +15,8 @@
 
 #include "ndds/ndds_c.h"
 
-typedef enum RTI_Retval {
-    RTI_OK,
-    RTI_ERROR
-} RTI_Retval;
+DDS_Boolean Common_allocate_and_copy_string(char **out_dest, const char *src);
 
-RTI_Retval Common_allocate_and_copy_string(char **out_dest, const char *src);
-
-RTI_Retval Common_allocate_string(char **out_dest, size_t length);
+DDS_Boolean Common_allocate_string(char **out_dest, size_t length);
 
 #endif /* common_h */

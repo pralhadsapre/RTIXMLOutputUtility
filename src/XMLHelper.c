@@ -83,25 +83,25 @@ void XMLHelper_pretty_print(FILE *stream, char *string, char *query)
     RTIXMLUTILSParser_freeDom(dom_root);
 }
 
-RTI_Retval XMLHelper_insert_enclosing_tag(
+DDS_Boolean XMLHelper_insert_enclosing_tag(
         char *qos_type, 
         struct RTIXMLSaveContext *context, 
         int closing)
 {
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
     const char *closing_format = "</%s>\n\0";
     const char *opening_format = "<%s>\n";
     const int closing_format_length = 5;
     const int opening_format_length = 3;
     int format_length = 0;
-    char *format = NULL;
+    const char *format = NULL;
 
     if (closing) {
         format_length = closing_format_length;
-        format = (char *) closing_format;
+        format = closing_format;
     } else {
         format_length = opening_format_length;
-        format = (char *) opening_format;
+        format = opening_format;
     }
 
     if (context->fout != NULL) {
@@ -120,20 +120,20 @@ RTI_Retval XMLHelper_insert_enclosing_tag(
         context->outputStringLength += (strlen(qos_type) + format_length);
     }
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     return result;
 }
 
-RTI_Retval XMLHelper_dump_datawriter_qos(
+DDS_Boolean XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_DataWriterQos datawriter_qos = DDS_DataWriterQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("datawriter_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -163,24 +163,24 @@ RTI_Retval XMLHelper_dump_datawriter_qos(
     DDS_DataWriterQos_save(&datawriter_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("datawriter_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_DataWriterQos_finalize(&datawriter_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <datawriter_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }
 
-RTI_Retval XMLHelper_dump_datareader_qos(
+DDS_Boolean XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_DataReaderQos datareader_qos = DDS_DataReaderQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("datareader_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -210,24 +210,24 @@ RTI_Retval XMLHelper_dump_datareader_qos(
     DDS_DataReaderQos_save(&datareader_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("datareader_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_DataReaderQos_finalize(&datareader_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <datareader_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }
 
-RTI_Retval XMLHelper_dump_topic_qos(
+DDS_Boolean XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_TopicQos topic_qos = DDS_TopicQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("topic_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -252,23 +252,23 @@ RTI_Retval XMLHelper_dump_topic_qos(
     DDS_TopicQos_save(&topic_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("topic_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_TopicQos_finalize(&topic_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <topic_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }
 
-RTI_Retval XMLHelper_dump_publisher_qos(
+DDS_Boolean XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_PublisherQos publisher_qos = DDS_PublisherQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("publisher_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -293,23 +293,23 @@ RTI_Retval XMLHelper_dump_publisher_qos(
     DDS_PublisherQos_save(&publisher_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("publisher_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_PublisherQos_finalize(&publisher_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <publisher_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }
 
-RTI_Retval XMLHelper_dump_subscriber_qos(
+DDS_Boolean XMLHelper_dump_subscriber_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_SubscriberQos subscriber_qos = DDS_SubscriberQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("subscriber_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -334,23 +334,23 @@ RTI_Retval XMLHelper_dump_subscriber_qos(
     DDS_SubscriberQos_save(&subscriber_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("subscriber_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_SubscriberQos_finalize(&subscriber_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <subscriber_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }
 
-RTI_Retval XMLHelper_dump_participant_qos(
+DDS_Boolean XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context) 
 {
     struct DDS_DomainParticipantQos participant_qos = DDS_DomainParticipantQos_INITIALIZER;
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     XMLHelper_insert_enclosing_tag("participant_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
@@ -373,11 +373,11 @@ RTI_Retval XMLHelper_dump_participant_qos(
     DDS_DomainParticipantQos_save(&participant_qos, NULL, context);
     XMLHelper_insert_enclosing_tag("participant_qos", context, 1);
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     if (DDS_DomainParticipantQos_finalize(&participant_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <participant_qos>! \n");
-        result = RTI_ERROR;
+        result = DDS_BOOLEAN_FALSE;
     }
     return result;
 }

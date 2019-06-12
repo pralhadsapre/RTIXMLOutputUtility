@@ -15,25 +15,25 @@
 #include <string.h>
 #include "CommandLineArgumentParser.h"
 
-const char *CMD_ARG_HELP[3] = {
+const char *CMD_ARG_HELP[ARG_ARRAY_SIZE] = {
         "-help", 
         "\t Displays all the options of the RTI_XMLOutputUtility", 
         ""};
-const char *CMD_ARG_USER_FILE[3] = {
+const char *CMD_ARG_USER_FILE[ARG_ARRAY_SIZE] = {
         "-qosFile", 
         "Absolute path of the QoS XML configuration file you want to analyze", 
         "OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded"};
-const char *CMD_ARG_OUTPUT_FILE[3] = {
+const char *CMD_ARG_OUTPUT_FILE[ARG_ARRAY_SIZE] = {
         "-outputFile", 
         "Filename where the utility will output the QoS XML values", 
         "OPTIONAL: If not specified the output will be to the console"};
-const char *CMD_ARG_PROFILE_PATH[3] = {
+const char *CMD_ARG_PROFILE_PATH[ARG_ARRAY_SIZE] = {
         "-profilePath", 
         "The fully qualified path of a QoS Profile" 
         "\n\t\t e.g. QoSLibraryName::QoSProfileName", 
         "OPTIONAL: The <qos_profile> with is_default_qos=\"true\" will be selected"
         "\n\t\t OR the default values will be returned for the -qosTag"};
-const char *CMD_ARG_QOS_TAG[3] = {
+const char *CMD_ARG_QOS_TAG[ARG_ARRAY_SIZE] = {
         "-qosTag", 
         "The XML tag name who QoS values you want to be fetched"
         "\n\t\t You can also select a subtag by separating it with a '/'"
@@ -45,7 +45,7 @@ const char *CMD_ARG_QOS_TAG[3] = {
         "\n\t\t\t \"participant_qos\", " 
         "\n\t\t\t \"publisher_qos\", " 
         "\n\t\t\t \"subscriber_qos\""};
-const char *CMD_ARG_TOPIC_NAME[3] = {
+const char *CMD_ARG_TOPIC_NAME[ARG_ARRAY_SIZE] = {
         "-topicName", 
         "Can be used with -qosTag = \"datawriter_qos\" | \"datareader_qos\" | \"topic_qos\"", 
         "OPTIONAL: The default value used with these types will be NULL"};
@@ -96,12 +96,12 @@ void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args)
     cmd_args->user_file = NULL;
 }
 
-RTI_Retval CommandLineArgumentParser_parse_arguments(
+DDS_Boolean CommandLineArgumentParser_parse_arguments(
         int argc, 
         char *argv[], 
         struct CommandLineArguments *output_values) 
 {
-    RTI_Retval result = RTI_ERROR;
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
     int i = 1;
 
     while (i < argc) {
@@ -131,7 +131,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_library, 
-                                string_size) != RTI_OK) {
+                                string_size) != DDS_BOOLEAN_TRUE) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_PROFILE_PATH[0]);
                         goto done;
@@ -148,7 +148,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_profile, 
-                                string_size) != RTI_OK) {
+                                string_size) != DDS_BOOLEAN_TRUE) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_PROFILE_PATH[0]);
                         goto done;
@@ -176,7 +176,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->qos_type, 
-                                string_size) != RTI_OK) {
+                                string_size) != DDS_BOOLEAN_TRUE) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -193,7 +193,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
                     if (Common_allocate_string(
                                 &output_values->query, 
-                                string_size) != RTI_OK) {
+                                string_size) != DDS_BOOLEAN_TRUE) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -205,7 +205,7 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
                 } else {
                     if (Common_allocate_string(
                                 &output_values->qos_type, 
-                                strlen(argv[i + 1])) != RTI_OK) {
+                                strlen(argv[i + 1])) != DDS_BOOLEAN_TRUE) {
                         printf("Buffer allocation for '%s' field failed! \n", 
                                 CMD_ARG_QOS_TAG[0]);
                         goto done;
@@ -231,24 +231,26 @@ RTI_Retval CommandLineArgumentParser_parse_arguments(
 
     if (output_values->qos_type == NULL) {
         printf("ERROR: '%s' is a REQUIRED argument for the utility! \n", CMD_ARG_QOS_TAG[0]);
+        printf("Here is the help on that option! \n");
+        printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_QOS_TAG[0], CMD_ARG_QOS_TAG[1], CMD_ARG_QOS_TAG[2]);
         goto done;
     }
 
-    if (!(!strcmp(output_values->qos_type, "datawriter_qos") 
-            || !strcmp(output_values->qos_type, "datareader_qos") 
-            || !strcmp(output_values->qos_type, "topic_qos") 
-            || !strcmp(output_values->qos_type, "participant_qos") 
-            || !strcmp(output_values->qos_type, "publisher_qos") 
-            || !strcmp(output_values->qos_type, "subscriber_qos"))) {
-        printf("ERROR: \"%s\" doesn't match one of the expected values for '%s' option! " 
-                "Please use the '%s' option for more information \n", 
+    if (!(strcmp(output_values->qos_type, "datawriter_qos") == 0
+            || strcmp(output_values->qos_type, "datareader_qos") == 0
+            || strcmp(output_values->qos_type, "topic_qos") == 0
+            || strcmp(output_values->qos_type, "participant_qos") == 0
+            || strcmp(output_values->qos_type, "publisher_qos") == 0
+            || strcmp(output_values->qos_type, "subscriber_qos") == 0)) {
+        printf("ERROR: \"%s\" doesn't match one of the expected values for '%s' option! \n", 
                 output_values->qos_type, 
-                CMD_ARG_QOS_TAG[0], 
-                CMD_ARG_HELP[0]);
+                CMD_ARG_QOS_TAG[0]);
+        printf("Here is the help on that option! \n");
+        printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_QOS_TAG[0], CMD_ARG_QOS_TAG[1], CMD_ARG_QOS_TAG[2]);
         goto done;
     }
 
-    result = RTI_OK;
+    result = DDS_BOOLEAN_TRUE;
 done:
     return result;
 }

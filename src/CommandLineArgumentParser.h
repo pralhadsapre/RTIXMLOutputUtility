@@ -17,14 +17,17 @@
 
 #define SPLIT_STRING_QOS_TAG "/"
 #define SPLIT_STRING_PROFILE_PATH "::"
+#define SPLIT_STRING_QOS_FILE ";"
+
+#define ARG_ARRAY_SIZE 3
 
 struct CommandLineArguments {
-    char *user_file;
-    char *output_file;
+    const char *user_file;
+    const char *output_file;
     char *qos_library;
     char *qos_profile;
     char *qos_type;
-    char *topic_name;
+    const char *topic_name;
     char *query;
 };
 
@@ -32,7 +35,7 @@ void CommandLineArguments_initialize(struct CommandLineArguments *cmd_args);
 
 void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args);
 
-RTI_Retval CommandLineArgumentParser_parse_arguments(
+DDS_Boolean CommandLineArgumentParser_parse_arguments(
         int argc, 
         char *argv[], 
         struct CommandLineArguments *output_values);

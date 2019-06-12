@@ -20,45 +20,45 @@
 DDS_DomainParticipant* XMLHelper_create_dummy_participant(
         DDS_DomainParticipantFactory *factory);
 
-RTI_Retval XMLHelper_insert_enclosing_tag(
+DDS_Boolean XMLHelper_insert_enclosing_tag(
         char *qos_type, 
         struct RTIXMLSaveContext *context, 
         int closing);
 
-RTI_Retval XMLHelper_dump_datawriter_qos(
+DDS_Boolean XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-RTI_Retval XMLHelper_dump_datareader_qos(
+DDS_Boolean XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-RTI_Retval XMLHelper_dump_topic_qos(
+DDS_Boolean XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
-        char *topic_name, 
+        const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-RTI_Retval XMLHelper_dump_publisher_qos(
-        DDS_DomainParticipantFactory *factory, 
-        char *library_name, 
-        char *profile_name, 
-        struct RTIXMLSaveContext *context);
-
-RTI_Retval XMLHelper_dump_subscriber_qos(
+DDS_Boolean XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);
 
-RTI_Retval XMLHelper_dump_participant_qos(
+DDS_Boolean XMLHelper_dump_subscriber_qos(
+        DDS_DomainParticipantFactory *factory, 
+        char *library_name, 
+        char *profile_name, 
+        struct RTIXMLSaveContext *context);
+
+DDS_Boolean XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
