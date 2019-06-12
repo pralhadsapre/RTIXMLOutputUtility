@@ -27,20 +27,26 @@ find_package(
     REQUIRED
     COMPONENTS
         core
-        routing_service
-    )
+)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src/")
-link_directories("${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/")
-
-# Create the executable for RTI_XMLOutputUtility
-add_executable(RTI_XMLOutputUtility
+set(RTI_XMLOUTPUTUTILITY_C_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLOutputUtility.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/CommandLineArgumentParser.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Common.c")
 
+link_directories("${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/")
+
+# Create the executable for RTI_XMLOutputUtility
+add_executable(RTI_XMLOutputUtility
+    ${RTI_XMLOUTPUTUTILITY_C_SOURCES}
+)
+
 target_link_libraries(RTI_XMLOutputUtility
     RTIConnextDDS::c_api
-    RTIConnextDDS::routing_service_c
-    rtixml2)
+    rtixml2
+)
+
+target_include_directories(RTI_XMLOutputUtility
+    PUBLIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/src")
