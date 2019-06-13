@@ -29,13 +29,25 @@ find_package(
         core
 )
 
+message("Compiler Version - ${CMAKE_C_COMPILER_VERSION}")
+message("Operating System - ${CMAKE_SYSTEM_NAME}")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND
+    CMAKE_C_COMPILER_VERSION VERSION_GREATER "4.6.0")
+    set(CONNEXTDDS_EXTERNAL_LIBS
+        -Wl,--no-as-needed  ${CONNEXTDDS_EXTERNAL_LIBS})
+    message("CONNEXTDDS_EXTERNAL_LIBS Updated")
+endif()
+
 set(RTI_XMLOUTPUTUTILITY_C_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLOutputUtility.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/CommandLineArgumentParser.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Common.c")
 
-link_directories("${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/")
+find_library(rtixml2_library
+    NAMES rtixml2
+    PATHS "${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/"
+)
 
 # Create the executable for RTI_XMLOutputUtility
 add_executable(RTI_XMLOutputUtility
@@ -44,7 +56,8 @@ add_executable(RTI_XMLOutputUtility
 
 target_link_libraries(RTI_XMLOutputUtility
     RTIConnextDDS::c_api
-    rtixml2
+    ${rtixml2_library}
+    ${CONNEXTDDS_EXTERNAL_LIBS}
 )
 
 target_include_directories(RTI_XMLOutputUtility
