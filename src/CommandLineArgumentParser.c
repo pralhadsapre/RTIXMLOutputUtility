@@ -19,9 +19,10 @@ const char *CMD_ARG_HELP[ARG_ARRAY_SIZE] = {
         "-help", 
         "\t Displays all the options of the RTI_XMLOutputUtility", 
         ""};
-const char *CMD_ARG_USER_FILE[ARG_ARRAY_SIZE] = {
+const char *CMD_ARG_QOS_FILE[ARG_ARRAY_SIZE] = {
         "-qosFile", 
-        "Absolute path of the QoS XML configuration file you want to analyze", 
+        "Absolute path of the QoS XML configuration files you want to analyze "
+        "\n\t\t You can also specify multiple files by separating them with a semicolon ';'", 
         "OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded"};
 const char *CMD_ARG_OUTPUT_FILE[ARG_ARRAY_SIZE] = {
         "-outputFile", 
@@ -57,7 +58,7 @@ void CommandLineArgumentParser_print_help()
     printf("Usage: %s [-OPTION] [VALUE] \n\n", 
             "[./]RTI_XMLOutputUtility[.exe]");
     printf("Options: \n");
-    printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_USER_FILE[0], CMD_ARG_USER_FILE[1], CMD_ARG_USER_FILE[2]);
+    printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_QOS_FILE[0], CMD_ARG_QOS_FILE[1], CMD_ARG_QOS_FILE[2]);
     printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_OUTPUT_FILE[0], CMD_ARG_OUTPUT_FILE[1], CMD_ARG_OUTPUT_FILE[2]);
     printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_PROFILE_PATH[0], CMD_ARG_PROFILE_PATH[1], CMD_ARG_PROFILE_PATH[2]);
     printf("%s \t %s \n \t\t %s \n\n", CMD_ARG_QOS_TAG[0], CMD_ARG_QOS_TAG[1], CMD_ARG_QOS_TAG[2]);
@@ -82,7 +83,7 @@ void CommandLineArguments_initialize(struct CommandLineArguments *cmd_args)
     cmd_args->qos_type = NULL;
     cmd_args->query = NULL;
     cmd_args->topic_name = NULL;
-    cmd_args->user_file = NULL;
+    cmd_args->qos_file = NULL;
 }
 
 void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args)
@@ -93,7 +94,79 @@ void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args)
     DDS_String_free(cmd_args->qos_type);
     DDS_String_free(cmd_args->query);
     cmd_args->topic_name = NULL;
-    cmd_args->user_file = NULL;
+    cmd_args->qos_file = NULL;
+}
+
+DDS_Boolean CommandLineArgumentParser_parse_qos_file(
+        const char *qos_file, 
+        struct DDS_StringSeq *url_profile) 
+{
+    DDS_Boolean result = DDS_BOOLEAN_FALSE;
+    char *buffer = NULL, *file_name = NULL, *buffer_base = NULL;
+    const char *token = NULL;
+    size_t string_size = 0;
+    int number_of_files = 1, i = 0;
+
+    token = qos_file;
+    while (token = strstr(token, SPLIT_STRING_QOS_FILE)) {
+        number_of_files++;
+        token += strlen(SPLIT_STRING_QOS_FILE);
+    }
+    printf("QoS file names detected are: \n");
+
+    DDS_StringSeq_ensure_length(
+            url_profile, 
+            number_of_files, 
+            number_of_files);
+
+    buffer_base = DDS_String_dup(qos_file);
+    buffer = buffer_base;
+    if (buffer == NULL) {
+        printf("Buffer allocation failed! \n");
+        goto done;
+    }
+
+    while (i < number_of_files) {
+        token = strstr(buffer, SPLIT_STRING_QOS_FILE);
+        if (token != NULL) {
+            string_size = (token - buffer);
+        } else {
+            token = buffer;
+            string_size = strlen(buffer);
+        }
+
+        DDS_String_free(file_name);
+        if (Common_allocate_string(
+                    &file_name, 
+                    string_size + strlen("file://")) != DDS_BOOLEAN_TRUE) {
+            printf("Buffer allocation for '%s' field failed! \n", 
+                    CMD_ARG_QOS_FILE[0]);
+            goto done;
+        }
+        strcat(file_name, "file://");
+        strncpy(
+                file_name + strlen("file://"), 
+                buffer, 
+                string_size);
+
+        *DDS_StringSeq_get_reference(url_profile, i) 
+                = DDS_String_dup(file_name);
+        printf("%d. %s \n", i + 1, file_name);
+        buffer = (char *) token;
+        buffer += strlen(SPLIT_STRING_QOS_FILE);
+        i++;
+    }
+
+    result = DDS_BOOLEAN_TRUE;
+done:
+    if (result != DDS_BOOLEAN_TRUE) {
+        printf("Parsing of the option '%s' failed! \n", CMD_ARG_QOS_FILE[0]);
+    }
+    buffer = NULL;
+    token = NULL;
+    DDS_String_free(buffer_base);
+    DDS_String_free(file_name);
+    return result;
 }
 
 DDS_Boolean CommandLineArgumentParser_parse_arguments(
@@ -105,25 +178,25 @@ DDS_Boolean CommandLineArgumentParser_parse_arguments(
     int i = 1;
 
     while (i < argc) {
-        if (!strcmp(argv[i], CMD_ARG_HELP[0])) {
+        if (strcmp(argv[i], CMD_ARG_HELP[0]) == 0) {
             CommandLineArgumentParser_print_help();
             goto done;
-        } else if (!strcmp(argv[i], CMD_ARG_USER_FILE[0])) {
+        } else if (!strcmp(argv[i], CMD_ARG_QOS_FILE[0])) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
-                output_values->user_file = argv[i + 1];
+                output_values->qos_file = argv[i + 1];
             } else {
                 goto done;
             }
-        } else if (!strcmp(argv[i], CMD_ARG_OUTPUT_FILE[0])) {
+        } else if (strcmp(argv[i], CMD_ARG_OUTPUT_FILE[0]) == 0) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
                 output_values->output_file = argv[i + 1];
             } else {
                 goto done;
             }
-        } else if (!strcmp(argv[i], CMD_ARG_PROFILE_PATH[0])) {
+        } else if (strcmp(argv[i], CMD_ARG_PROFILE_PATH[0]) == 0) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
                 char *token = NULL;
-                int string_size = 0;
+                size_t string_size = 0;
 
                 token = strstr(argv[i + 1], SPLIT_STRING_PROFILE_PATH);
                 if (token != NULL) {
@@ -165,7 +238,7 @@ DDS_Boolean CommandLineArgumentParser_parse_arguments(
             } else {
                 goto done;
             }
-        } else if (!strcmp(argv[i], CMD_ARG_QOS_TAG[0])) {
+        } else if (strcmp(argv[i], CMD_ARG_QOS_TAG[0]) == 0) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
                 char *token = NULL;
                 int string_size = 0;
@@ -215,7 +288,7 @@ DDS_Boolean CommandLineArgumentParser_parse_arguments(
             } else {
                 goto done;
             }
-        } else if (!strcmp(argv[i], CMD_ARG_TOPIC_NAME[0])) {
+        } else if (strcmp(argv[i], CMD_ARG_TOPIC_NAME[0]) == 0) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
                 output_values->topic_name = argv[i + 1];
             } else {
@@ -259,8 +332,8 @@ void CommandLineArgumentParser_print_arguments(struct CommandLineArguments *valu
 {
     printf("The parsed arguments are: \n");
     printf("%s \t '%s' \n", 
-            CMD_ARG_USER_FILE[0], 
-            values->user_file == NULL ? "" : values->user_file);
+            CMD_ARG_QOS_FILE[0], 
+            values->qos_file == NULL ? "" : values->qos_file);
     printf("%s \t '%s' \n", CMD_ARG_OUTPUT_FILE[0], 
             values->output_file == NULL ? "" : values->output_file);
     printf("%s \t '%s'::'%s' \n", 

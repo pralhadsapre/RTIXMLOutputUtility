@@ -98,22 +98,12 @@ int main(int argc, char *argv[])
         goto done;
     }
 
-    if (cmd_args.user_file != NULL) {
-        if (Common_allocate_string(
-                    &user_qos_profile_file, 
-                    strlen("file://") + strlen(cmd_args.user_file)) != DDS_BOOLEAN_TRUE) {
-            printf("String allocation for file name '%s' failed! \n", 
-                    cmd_args.user_file);
+    if (cmd_args.qos_file != NULL) {
+        if (CommandLineArgumentParser_parse_qos_file(
+                cmd_args.qos_file, 
+                &dpf_qos.profile.url_profile) != DDS_BOOLEAN_TRUE) {
             goto done;
         }
-        sprintf(
-                user_qos_profile_file, 
-                "file://%s", 
-                cmd_args.user_file);
-
-        DDS_StringSeq_ensure_length(&dpf_qos.profile.url_profile, 1, 1);
-        *DDS_StringSeq_get_reference(&dpf_qos.profile.url_profile, 0) 
-                = DDS_String_dup(user_qos_profile_file);
         DDS_DomainParticipantFactory_set_qos(factory, &dpf_qos);
     }
 

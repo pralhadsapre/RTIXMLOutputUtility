@@ -22,7 +22,7 @@
 #define ARG_ARRAY_SIZE 3
 
 struct CommandLineArguments {
-    const char *user_file;
+    const char *qos_file;
     const char *output_file;
     char *qos_library;
     char *qos_profile;
@@ -39,6 +39,10 @@ DDS_Boolean CommandLineArgumentParser_parse_arguments(
         int argc, 
         char *argv[], 
         struct CommandLineArguments *output_values);
+
+DDS_Boolean CommandLineArgumentParser_parse_qos_file(
+        const char *qos_file, 
+        struct DDS_StringSeq *url_profile);
 
 void CommandLineArgumentParser_print_help();
 
