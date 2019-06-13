@@ -21,7 +21,7 @@ void XMLHelper_print_node(
         FILE *stream, 
         int is_root) 
 {
-    int i = 0, has_children = 0;
+    unsigned int i = 0, has_children = 0;
     const char *text = NULL;
     while (node) {
         has_children = RTIXMLUTILSObject_getChildCount(node) > 0 ? 1 : 0;
@@ -91,11 +91,12 @@ DDS_Boolean XMLHelper_insert_enclosing_tag(
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
     const char *closing_format = "</%s>\n\0";
     const char *opening_format = "<%s>\n";
-    const int closing_format_length = 5;
-    const int opening_format_length = 3;
-    int format_length = 0;
+    const unsigned int closing_format_length = 5;
+    const unsigned int opening_format_length = 3;
+    unsigned int format_length = 0, qos_type_length = 0;
     const char *format = NULL;
 
+    qos_type_length = (unsigned int) strlen(qos_type);
     if (closing) {
         format_length = closing_format_length;
         format = closing_format;
@@ -106,18 +107,18 @@ DDS_Boolean XMLHelper_insert_enclosing_tag(
 
     if (context->fout != NULL) {
         fprintf(context->fout, format, qos_type);
-        context->outputStringLength += (strlen(qos_type) + format_length);
+        context->outputStringLength += (qos_type_length + format_length);
     } else if (context->sout != NULL) {
-        if (context->ssize >= (context->outputStringLength + strlen(qos_type) + format_length)) {
+        if (context->ssize >= (context->outputStringLength + qos_type_length + format_length)) {
             char *current_position = context->sout;
             current_position += context->outputStringLength;
             sprintf(current_position, format, qos_type);
-            context->outputStringLength += (strlen(qos_type) + format_length);
+            context->outputStringLength += (qos_type_length + format_length);
         } else {
             goto done;
         }
     } else {
-        context->outputStringLength += (strlen(qos_type) + format_length);
+        context->outputStringLength += (qos_type_length + format_length);
     }
 
     result = DDS_BOOLEAN_TRUE;
