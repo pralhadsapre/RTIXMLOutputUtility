@@ -109,7 +109,7 @@ DDS_Boolean CommandLineArgumentParser_parse_qos_file(
     int number_of_files = 1, i = 0;
 
     token = qos_file;
-    while (token = strstr(token, SPLIT_STRING_QOS_FILE)) {
+    while ((token = strstr(token, SPLIT_STRING_QOS_FILE))) {
         number_of_files++;
         token += strlen(SPLIT_STRING_QOS_FILE);
     }
