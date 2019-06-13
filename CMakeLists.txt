@@ -46,6 +46,17 @@ if(BUILD_SHARED_LIBS)
 else()
     set(rtixml2_library_name "rtixml2z")
 endif()
+
+if(CMAKE_BUILD_TYPE)
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" build_mode)
+else()
+    set(build_mode "DEBUG")
+endif()
+
+if(build_mode STREQUAL "DEBUG")
+    set(rtixml2_library_name "${rtixml2_library_name}d")
+endif()
+
 message("-- rtixml2_library_name: ${rtixml2_library_name}")
 
 find_library(rtixml2_library
