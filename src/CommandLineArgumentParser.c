@@ -22,7 +22,8 @@ const char *CMD_ARG_HELP[ARG_ARRAY_SIZE] = {
 const char *CMD_ARG_QOS_FILE[ARG_ARRAY_SIZE] = {
         "-qosFile", 
         "Absolute path of the QoS XML configuration files you want to analyze "
-        "\n\t\t You can also specify multiple files by separating them with a semicolon ';'", 
+        "\n\t\t You can also specify multiple files by separating them with a semicolon ';' "
+        "\n\t\t and surrounding them with single quotes 'file_path_1;file_path_2;file_path_3'", 
         "OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded"};
 const char *CMD_ARG_OUTPUT_FILE[ARG_ARRAY_SIZE] = {
         "-outputFile", 
