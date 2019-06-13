@@ -123,6 +123,7 @@ DDS_Boolean RTI_XMLHelper_insert_enclosing_tag(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     return result;
 }
 
@@ -166,6 +167,7 @@ DDS_Boolean RTI_XMLHelper_dump_datawriter_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_DataWriterQos_finalize(&datawriter_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <datawriter_qos>! \n");
         result = DDS_BOOLEAN_FALSE;
@@ -213,6 +215,7 @@ DDS_Boolean RTI_XMLHelper_dump_datareader_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_DataReaderQos_finalize(&datareader_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <datareader_qos>! \n");
         result = DDS_BOOLEAN_FALSE;
@@ -255,6 +258,7 @@ DDS_Boolean RTI_XMLHelper_dump_topic_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_TopicQos_finalize(&topic_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <topic_qos>! \n");
         result = DDS_BOOLEAN_FALSE;
@@ -296,6 +300,7 @@ DDS_Boolean RTI_XMLHelper_dump_publisher_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_PublisherQos_finalize(&publisher_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <publisher_qos>! \n");
         result = DDS_BOOLEAN_FALSE;
@@ -337,6 +342,7 @@ DDS_Boolean RTI_XMLHelper_dump_subscriber_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_SubscriberQos_finalize(&subscriber_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <subscriber_qos>! \n");
         result = DDS_BOOLEAN_FALSE;
@@ -376,6 +382,7 @@ DDS_Boolean RTI_XMLHelper_dump_participant_qos(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (DDS_DomainParticipantQos_finalize(&participant_qos) != DDS_RETCODE_OK) {
         printf("Failed to delete the <participant_qos>! \n");
         result = DDS_BOOLEAN_FALSE;

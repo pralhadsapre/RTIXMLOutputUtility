@@ -77,6 +77,7 @@ DDS_Boolean RTI_XMLOutputUtility_process_arguments(
     }
     result = DDS_BOOLEAN_TRUE;
 done:
+
     return result;
 }
 
@@ -183,6 +184,7 @@ int main(int argc, char *argv[])
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     DDS_String_free(user_qos_profile_file);
 
     if (cmd_args.output_file != NULL) {

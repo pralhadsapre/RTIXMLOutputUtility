@@ -159,6 +159,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     if (!result) {
         printf("Parsing of the option '%s' failed! \n", RTI_CMD_ARG_QOS_FILE[0]);
     }
@@ -320,6 +321,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
 
     result = DDS_BOOLEAN_TRUE;
 done:
+
     return result;
 }
 
