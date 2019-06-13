@@ -41,8 +41,15 @@ set(RTI_XMLOUTPUTUTILITY_C_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/Common.c")
 
+if(BUILD_SHARED_LIBS)
+    set(rtixml2_library_name "rtixml2")
+else()
+    set(rtixml2_library_name "rtixml2z")
+endif()
+message("-- rtixml2_library_name: ${rtixml2_library_name}")
+
 find_library(rtixml2_library
-    NAMES rtixml2
+    NAMES ${rtixml2_library_name}
     PATHS "${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/"
 )
 
