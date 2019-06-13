@@ -242,7 +242,7 @@ DDS_Boolean CommandLineArgumentParser_parse_arguments(
         } else if (strcmp(argv[i], CMD_ARG_QOS_TAG[0]) == 0) {
             if (CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
                 char *token = NULL;
-                int string_size = 0;
+                size_t string_size = 0;
 
                 token = strstr(argv[i + 1], SPLIT_STRING_QOS_TAG);
                 if (token != NULL) {
