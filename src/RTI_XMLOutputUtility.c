@@ -13,65 +13,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "CommandLineArgumentParser.h"
-#include "XMLHelper.h"
+#include "RTI_CommandLineArgumentParser.h"
+#include "RTI_XMLHelper.h"
 
 DDS_Boolean RTI_XMLOutputUtility_process_arguments(
-        struct CommandLineArguments *cmd_args, 
+        struct RTI_CommandLineArguments *cmd_args, 
         struct RTIXMLSaveContext *xml_save_context) 
 {
     DDS_DomainParticipantFactory *factory = DDS_TheParticipantFactory;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
     if (strcmp("datareader_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_datareader_qos(
+        if (!RTI_XMLHelper_dump_datareader_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     } else if(strcmp("datawriter_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_datawriter_qos(
+        if (!RTI_XMLHelper_dump_datawriter_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     } else if(strcmp("topic_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_topic_qos(
+        if (!RTI_XMLHelper_dump_topic_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
                 cmd_args->topic_name, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     } else if(strcmp("publisher_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_publisher_qos(
+        if (!RTI_XMLHelper_dump_publisher_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     } else if(strcmp("subscriber_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_subscriber_qos(
+        if (!RTI_XMLHelper_dump_subscriber_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     } else if(strcmp("participant_qos", cmd_args->qos_type) == 0) {
-        if (XMLHelper_dump_participant_qos(
+        if (!RTI_XMLHelper_dump_participant_qos(
                 factory, 
                 cmd_args->qos_library, 
                 cmd_args->qos_profile, 
-                xml_save_context) != DDS_BOOLEAN_TRUE) {
+                xml_save_context)) {
             goto done;
         }
     }
@@ -86,22 +86,22 @@ int main(int argc, char *argv[])
     DDS_DomainParticipantFactory *factory = DDS_TheParticipantFactory;
     struct DDS_XMLObject *root = NULL, *default_profile = NULL;
     struct DDS_DomainParticipantFactoryQos dpf_qos = DDS_DomainParticipantFactoryQos_INITIALIZER;
-    struct CommandLineArguments cmd_args;
+    struct RTI_CommandLineArguments cmd_args;
     char *user_qos_profile_file = NULL;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    CommandLineArguments_initialize(&cmd_args);
-    result = CommandLineArgumentParser_parse_arguments(argc, argv, &cmd_args);
-    CommandLineArgumentParser_print_arguments(&cmd_args);
+    RTI_CommandLineArguments_initialize(&cmd_args);
+    result = RTI_CommandLineArgumentParser_parse_arguments(argc, argv, &cmd_args);
+    RTI_CommandLineArgumentParser_print_arguments(&cmd_args);
 
     if (result == DDS_BOOLEAN_FALSE) {
         goto done;
     }
 
     if (cmd_args.qos_file != NULL) {
-        if (CommandLineArgumentParser_parse_qos_file(
+        if (!RTI_CommandLineArgumentParser_parse_qos_file(
                 cmd_args.qos_file, 
-                &dpf_qos.profile.url_profile) != DDS_BOOLEAN_TRUE) {
+                &dpf_qos.profile.url_profile)) {
             goto done;
         }
         DDS_DomainParticipantFactory_set_qos(factory, &dpf_qos);
@@ -142,26 +142,28 @@ int main(int argc, char *argv[])
     }
 
     xml_save_context.depth = 1;
-    while (1) {
-        if (RTI_XMLOutputUtility_process_arguments(
-                &cmd_args, 
-                &xml_save_context) != DDS_BOOLEAN_TRUE) {
-            printf("The processing of arguments failed! \n");
-            goto done;
-        }
+    /* First pass to detect the length of the buffer sout we need to allocate */
+    if (!RTI_XMLOutputUtility_process_arguments(
+            &cmd_args, 
+            &xml_save_context)) {
+        printf("The processing of arguments failed! \n");
+        goto done;
+    }
 
-        if (xml_save_context.sout == NULL) {
-            if (Common_allocate_string(
-                    &xml_save_context.sout, 
-                    xml_save_context.outputStringLength) != DDS_BOOLEAN_TRUE) {
-                printf("Buffer allocation for XML output failed! \n");
-                goto done;
-            }
-            xml_save_context.ssize = xml_save_context.outputStringLength;
-            xml_save_context.outputStringLength = 0;
-        } else {
-            break;
-        }
+    xml_save_context.sout = DDS_String_alloc(xml_save_context.outputStringLength);
+    if (xml_save_context.sout == NULL) {
+        printf("Buffer allocation for XML output failed! \n");
+        goto done;
+    }
+    xml_save_context.ssize = xml_save_context.outputStringLength;
+    xml_save_context.outputStringLength = 0;
+
+    /* Second pass to load the buffer sout with XML content */
+    if (!RTI_XMLOutputUtility_process_arguments(
+            &cmd_args, 
+            &xml_save_context)) {
+        printf("The processing of arguments failed! \n");
+        goto done;
     }
 
     if (cmd_args.output_file != NULL) {
@@ -174,7 +176,7 @@ int main(int argc, char *argv[])
         xml_save_context.fout = stdout;
     }
 
-    XMLHelper_pretty_print(
+    RTI_XMLHelper_pretty_print(
             xml_save_context.fout, 
             xml_save_context.sout, 
             cmd_args.query);
@@ -192,7 +194,7 @@ done:
         DDS_String_free(xml_save_context.sout);
     }
 
-    CommandLineArguments_finalize(&cmd_args);
+    RTI_CommandLineArguments_finalize(&cmd_args);
     DDS_DomainParticipantFactoryQos_finalize(&dpf_qos);
 
     return result;

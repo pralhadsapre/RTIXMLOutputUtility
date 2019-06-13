@@ -10,18 +10,18 @@
  * use or inability to use the software.
  */
 
-#ifndef commandlineargumentparser_h
-#define commandlineargumentparser_h
+#ifndef rti_commandlineargumentparser_h
+#define rti_commandlineargumentparser_h
 
-#include "Common.h"
+#include "ndds/ndds_c.h"
 
-#define SPLIT_STRING_QOS_TAG "/"
-#define SPLIT_STRING_PROFILE_PATH "::"
-#define SPLIT_STRING_QOS_FILE ";"
+#define RTI_SPLIT_STRING_QOS_TAG "/"
+#define RTI_SPLIT_STRING_PROFILE_PATH "::"
+#define RTI_SPLIT_STRING_QOS_FILE ";"
 
-#define ARG_ARRAY_SIZE 3
+#define RTI_CMD_ARG_INFO_ARRAY_SIZE 3
 
-struct CommandLineArguments {
+struct RTI_CommandLineArguments {
     const char *qos_file;
     const char *output_file;
     char *qos_library;
@@ -31,21 +31,21 @@ struct CommandLineArguments {
     char *query;
 };
 
-void CommandLineArguments_initialize(struct CommandLineArguments *cmd_args);
+void RTI_CommandLineArguments_initialize(struct RTI_CommandLineArguments *cmd_args);
 
-void CommandLineArguments_finalize(struct CommandLineArguments *cmd_args);
+void RTI_CommandLineArguments_finalize(struct RTI_CommandLineArguments *cmd_args);
 
-DDS_Boolean CommandLineArgumentParser_parse_arguments(
+DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
         int argc, 
         char *argv[], 
-        struct CommandLineArguments *output_values);
+        struct RTI_CommandLineArguments *output_values);
 
-DDS_Boolean CommandLineArgumentParser_parse_qos_file(
+DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
         const char *qos_file, 
         struct DDS_StringSeq *url_profile);
 
-void CommandLineArgumentParser_print_help();
+void RTI_CommandLineArgumentParser_print_help();
 
-void CommandLineArgumentParser_print_arguments(struct CommandLineArguments *values);
+void RTI_CommandLineArgumentParser_print_arguments(struct RTI_CommandLineArguments *values);
 
-#endif /* commandlineargumentparser_h */
+#endif /* rti_commandlineargumentparser_h */

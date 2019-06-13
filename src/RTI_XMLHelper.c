@@ -13,9 +13,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "XMLHelper.h"
+#include "RTI_XMLHelper.h"
 
-void XMLHelper_print_node(
+void RTI_XMLHelper_print_node(
         struct RTIXMLUTILSObject *node, 
         unsigned int indent, 
         FILE *stream, 
@@ -27,7 +27,7 @@ void XMLHelper_print_node(
         has_children = RTIXMLUTILSObject_getChildCount(node) > 0 ? 1 : 0;
 
         for (i = 0; i < indent; i++) {
-            fprintf(stream, "%s", INDENTATION_UNIT);
+            fprintf(stream, "%s", RTI_XMLHELPER_INDENTATION_UNIT);
         }
         fprintf(stream, "<%s>", RTIXMLUTILSObject_getTagName(node));
         if (has_children) {
@@ -37,7 +37,7 @@ void XMLHelper_print_node(
         text = RTIXMLUTILSObject_getText(node);
         if (strlen(text) > 0) {
             for (i = 0; i < indent + 1 && has_children; i++) {
-                fprintf(stream, "%s", INDENTATION_UNIT);
+                fprintf(stream, "%s", RTI_XMLHELPER_INDENTATION_UNIT);
             }
             fprintf(stream, "%s", text);
             if (has_children) {
@@ -45,14 +45,14 @@ void XMLHelper_print_node(
             }
         }
 
-        XMLHelper_print_node(
+        RTI_XMLHelper_print_node(
                 RTIXMLUTILSObject_getFirstChild(node), 
                 indent + 1, 
                 stream, 
                 0);
 
         for (i = 0; i < indent && has_children; i++) {
-            fprintf(stream, "%s", INDENTATION_UNIT);
+            fprintf(stream, "%s", RTI_XMLHELPER_INDENTATION_UNIT);
         }
         fprintf(stream, "</%s>\n", RTIXMLUTILSObject_getTagName(node));
 
@@ -64,7 +64,7 @@ void XMLHelper_print_node(
     }
 }
 
-void XMLHelper_pretty_print(FILE *stream, char *string, char *query) 
+void RTI_XMLHelper_pretty_print(FILE *stream, char *string, char *query) 
 {
     struct RTIXMLUTILSObject *dom_root = NULL, *query_root = NULL;
 
@@ -74,16 +74,16 @@ void XMLHelper_pretty_print(FILE *stream, char *string, char *query)
         if (query_root == NULL) {
             printf("The queried subtag '%s' couldn't be found! \n", query);
         } else {
-            XMLHelper_print_node(query_root, 0, stream, 1);
+            RTI_XMLHelper_print_node(query_root, 0, stream, 1);
         }
     } else {
-        XMLHelper_print_node(dom_root, 0, stream, 1);
+        RTI_XMLHelper_print_node(dom_root, 0, stream, 1);
     }
 
     RTIXMLUTILSParser_freeDom(dom_root);
 }
 
-DDS_Boolean XMLHelper_insert_enclosing_tag(
+DDS_Boolean RTI_XMLHelper_insert_enclosing_tag(
         char *qos_type, 
         struct RTIXMLSaveContext *context, 
         int closing)
@@ -126,7 +126,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_datawriter_qos(
+DDS_Boolean RTI_XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -136,7 +136,7 @@ DDS_Boolean XMLHelper_dump_datawriter_qos(
     struct DDS_DataWriterQos datawriter_qos = DDS_DataWriterQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("datawriter_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("datawriter_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         if (DDS_DataWriterQos_get_defaultI(&datawriter_qos) != DDS_RETCODE_OK) {
             printf("Failed to get the default values for <datawriter_qos>! \n");
@@ -162,7 +162,7 @@ DDS_Boolean XMLHelper_dump_datawriter_qos(
             NULL, 
             context);
     DDS_DataWriterQos_save(&datawriter_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("datawriter_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("datawriter_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:
@@ -173,7 +173,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_datareader_qos(
+DDS_Boolean RTI_XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -183,7 +183,7 @@ DDS_Boolean XMLHelper_dump_datareader_qos(
     struct DDS_DataReaderQos datareader_qos = DDS_DataReaderQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("datareader_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("datareader_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         if (DDS_DataReaderQos_get_defaultI(&datareader_qos) != DDS_RETCODE_OK) {
             printf("Failed to get the default values for <datareader_qos>! \n");
@@ -209,7 +209,7 @@ DDS_Boolean XMLHelper_dump_datareader_qos(
             NULL, 
             context);
     DDS_DataReaderQos_save(&datareader_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("datareader_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("datareader_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:
@@ -220,7 +220,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_topic_qos(
+DDS_Boolean RTI_XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -230,7 +230,7 @@ DDS_Boolean XMLHelper_dump_topic_qos(
     struct DDS_TopicQos topic_qos = DDS_TopicQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("topic_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("topic_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         if (DDS_TopicQos_get_defaultI(&topic_qos) != DDS_RETCODE_OK) {
             printf("Failed to get the default values for <topic_qos>! \n");
@@ -251,7 +251,7 @@ DDS_Boolean XMLHelper_dump_topic_qos(
         }
     }
     DDS_TopicQos_save(&topic_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("topic_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("topic_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:
@@ -262,7 +262,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_publisher_qos(
+DDS_Boolean RTI_XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -271,7 +271,7 @@ DDS_Boolean XMLHelper_dump_publisher_qos(
     struct DDS_PublisherQos publisher_qos = DDS_PublisherQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("publisher_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("publisher_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         DDS_PublisherQos_get_defaultI(&publisher_qos);
     } else {
@@ -292,7 +292,7 @@ DDS_Boolean XMLHelper_dump_publisher_qos(
             NULL, 
             context);
     DDS_PublisherQos_save(&publisher_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("publisher_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("publisher_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:
@@ -303,7 +303,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_subscriber_qos(
+DDS_Boolean RTI_XMLHelper_dump_subscriber_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -312,7 +312,7 @@ DDS_Boolean XMLHelper_dump_subscriber_qos(
     struct DDS_SubscriberQos subscriber_qos = DDS_SubscriberQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("subscriber_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("subscriber_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         DDS_SubscriberQos_get_defaultI(&subscriber_qos);
     } else {
@@ -333,7 +333,7 @@ DDS_Boolean XMLHelper_dump_subscriber_qos(
             NULL, 
             context);
     DDS_SubscriberQos_save(&subscriber_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("subscriber_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("subscriber_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:
@@ -344,7 +344,7 @@ done:
     return result;
 }
 
-DDS_Boolean XMLHelper_dump_participant_qos(
+DDS_Boolean RTI_XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -353,7 +353,7 @@ DDS_Boolean XMLHelper_dump_participant_qos(
     struct DDS_DomainParticipantQos participant_qos = DDS_DomainParticipantQos_INITIALIZER;
     DDS_Boolean result = DDS_BOOLEAN_FALSE;
 
-    XMLHelper_insert_enclosing_tag("participant_qos", context, 0);
+    RTI_XMLHelper_insert_enclosing_tag("participant_qos", context, 0);
     if (library_name == NULL || profile_name == NULL) {
         if (DDS_DomainParticipantQos_get_defaultI(&participant_qos) != DDS_RETCODE_OK) {
             printf("Failed to get the default values for <participant_qos>! \n");
@@ -372,7 +372,7 @@ DDS_Boolean XMLHelper_dump_participant_qos(
         }
     }
     DDS_DomainParticipantQos_save(&participant_qos, NULL, context);
-    XMLHelper_insert_enclosing_tag("participant_qos", context, 1);
+    RTI_XMLHelper_insert_enclosing_tag("participant_qos", context, 1);
 
     result = DDS_BOOLEAN_TRUE;
 done:

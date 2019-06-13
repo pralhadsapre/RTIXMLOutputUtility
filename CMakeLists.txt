@@ -37,9 +37,8 @@ endif()
 
 set(RTI_XMLOUTPUTUTILITY_C_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLOutputUtility.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/CommandLineArgumentParser.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Common.c")
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_CommandLineArgumentParser.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLHelper.c")
 
 if(BUILD_SHARED_LIBS)
     set(rtixml2_library_name "rtixml2")

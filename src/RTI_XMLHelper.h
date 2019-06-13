@@ -10,55 +10,55 @@
  * use or inability to use the software.
  */
 
-#ifndef xmlhelper_h
-#define xmlhelper_h
+#ifndef rti_xmlhelper_h
+#define rti_xmlhelper_h
 
-#include "Common.h"
+#include "ndds/ndds_c.h"
 
-#define INDENTATION_UNIT "    "
+#define RTI_XMLHELPER_INDENTATION_UNIT "    "
 
-DDS_DomainParticipant* XMLHelper_create_dummy_participant(
+DDS_DomainParticipant* RTI_XMLHelper_create_dummy_participant(
         DDS_DomainParticipantFactory *factory);
 
-DDS_Boolean XMLHelper_insert_enclosing_tag(
+DDS_Boolean RTI_XMLHelper_insert_enclosing_tag(
         char *qos_type, 
         struct RTIXMLSaveContext *context, 
         int closing);
 
-DDS_Boolean XMLHelper_dump_datawriter_qos(
+DDS_Boolean RTI_XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-DDS_Boolean XMLHelper_dump_datareader_qos(
+DDS_Boolean RTI_XMLHelper_dump_datareader_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-DDS_Boolean XMLHelper_dump_topic_qos(
+DDS_Boolean RTI_XMLHelper_dump_topic_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         const char *topic_name, 
         struct RTIXMLSaveContext *context);
 
-DDS_Boolean XMLHelper_dump_publisher_qos(
+DDS_Boolean RTI_XMLHelper_dump_publisher_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);
 
-DDS_Boolean XMLHelper_dump_subscriber_qos(
+DDS_Boolean RTI_XMLHelper_dump_subscriber_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
         struct RTIXMLSaveContext *context);
 
-DDS_Boolean XMLHelper_dump_participant_qos(
+DDS_Boolean RTI_XMLHelper_dump_participant_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
         char *profile_name, 
@@ -99,12 +99,12 @@ struct RTIXMLUTILSObject* RTIXMLUTILSObject_getFirstChildWithTag(
 
 /* Forward declaration end here */
 
-void XMLHelper_print_node(
+void RTI_XMLHelper_print_node(
         struct RTIXMLUTILSObject *node, 
         unsigned int indent, 
         FILE *stream, 
         int is_root);
 
-void XMLHelper_pretty_print(FILE *stream, char *string, char *query);
+void RTI_XMLHelper_pretty_print(FILE *stream, char *string, char *query);
 
-#endif /* xmlhelper_h */
+#endif /* rti_xmlhelper_h */
