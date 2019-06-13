@@ -29,13 +29,10 @@ find_package(
         core
 )
 
-message("Compiler Version - ${CMAKE_C_COMPILER_VERSION}")
-message("Operating System - ${CMAKE_SYSTEM_NAME}")
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND
     CMAKE_C_COMPILER_VERSION VERSION_GREATER "4.6.0")
     set(CONNEXTDDS_EXTERNAL_LIBS
         -Wl,--no-as-needed  ${CONNEXTDDS_EXTERNAL_LIBS})
-    message("CONNEXTDDS_EXTERNAL_LIBS Updated")
 endif()
 
 set(RTI_XMLOUTPUTUTILITY_C_SOURCES
