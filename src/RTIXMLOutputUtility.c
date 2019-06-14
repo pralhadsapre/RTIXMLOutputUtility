@@ -13,8 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "RTI_CommandLineArgumentParser.h"
-#include "RTI_XMLHelper.h"
+#include "CommandLineArgumentParser.h"
+#include "XMLHelper.h"
 
 DDS_Boolean RTI_XMLOutputUtility_process_arguments(
         struct RTI_CommandLineArguments *cmd_args, 

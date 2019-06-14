@@ -1,4 +1,4 @@
-# RTI_XMLOutputUtility
+# RTIXMLOutputUtility
 A command line utility to output final XML values provided by a QoS Profile for the RTI Connext DDS Pro product.
 
 ## Purpose
@@ -23,8 +23,7 @@ Create the toolchain file to compile for your platform
 cmake .. 
     -DCONNEXTDDS_DIR=<RTI Connext DDS installation folder> 
     -DCONNEXTDDS_ARCH=<RTI Connext DDS target architecture installed>
-    -DCMAKE_BUILD_TYPE=<Release | Debug>
-    -DBUILD_SHARED_LIBS=<0 | 1>
+    -DCMAKE_BUILD_TYPE=Release
 ```
 Compile
 ```
@@ -42,7 +41,7 @@ Here are the various options for this utility
 | profilePath | The fully qualified path of a QoS Profile e.g. QoSLibraryName::QoSProfileName | OPTIONAL: The,with is_default_qos="true" will be selected OR the default values will be returned for the -qosTag |
 | qosTag | The XML tag name who QoS values you want to be fetched. You can also select a subtag by separating it with a '/'  e.g. datawriter_qos/history or participant_qos/property | REQUIRED: Allowed values = {datawriter_qos, datareader_qos, topic_qos, participant_qos, publisher_qos, subscriber_qos} |
 | topicName | Can be used with -qosTag = {datawriter_qos, datareader_qos, topic_qos} | OPTIONAL: The default value used with these types will be NULL |
-| help | Displays all the options of the RTI_XMLOutputUtility | OPTIONAL |
+| help | Displays all the options of the RTIXMLOutputUtility | OPTIONAL |
 
 You should also add the the location of the lib folder to your PATH (Windows) or DYLD_LIBRARY_PATH (Mac) or LD_LIBRARY_PATH (Linux) if you compiled the utility using ``` -DBUILD_SHARED_LIBS=1 ```
 
@@ -60,7 +59,7 @@ set PATH=<RTI Connext DDS installation folder>/lib/<architecture>;%PATH%
 ## Example
 Here is a sample usage of the utility on a Linux machine
 ```
-$ ./RTI_XMLOutputUtility 
+$ ./RTIXMLOutputUtility 
     -qosFile '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml'
     -profilePath Data_Library::Data_Profile 
     -outputFile Dummy.txt 

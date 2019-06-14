@@ -35,10 +35,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND
         -Wl,--no-as-needed  ${CONNEXTDDS_EXTERNAL_LIBS})
 endif()
 
-set(RTI_XMLOUTPUTUTILITY_C_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLOutputUtility.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_CommandLineArgumentParser.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTI_XMLHelper.c")
+set(RTIXMLOUTPUTUTILITY_C_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/RTIXMLOutputUtility.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/CommandLineArgumentParser.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c")
 
 if(BUILD_SHARED_LIBS)
     set(rtixml2_library_name "rtixml2")
@@ -63,17 +63,17 @@ find_library(rtixml2_library
     PATHS "${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/"
 )
 
-# Create the executable for RTI_XMLOutputUtility
-add_executable(RTI_XMLOutputUtility
-    ${RTI_XMLOUTPUTUTILITY_C_SOURCES}
+# Create the executable for RTIXMLOutputUtility
+add_executable(RTIXMLOutputUtility
+    ${RTIXMLOUTPUTUTILITY_C_SOURCES}
 )
 
-target_link_libraries(RTI_XMLOutputUtility
+target_link_libraries(RTIXMLOutputUtility
     RTIConnextDDS::c_api
     ${rtixml2_library}
     ${CONNEXTDDS_EXTERNAL_LIBS}
 )
 
-target_include_directories(RTI_XMLOutputUtility
+target_include_directories(RTIXMLOutputUtility
     PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/src")

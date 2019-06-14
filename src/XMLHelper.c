@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "RTI_XMLHelper.h"
+#include "XMLHelper.h"
 
 void RTI_XMLHelper_print_node(
         struct RTIXMLUTILSObject *node, 

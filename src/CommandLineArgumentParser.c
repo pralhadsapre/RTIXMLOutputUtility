@@ -13,11 +13,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "RTI_CommandLineArgumentParser.h"
+#include "CommandLineArgumentParser.h"
 
 const char *RTI_CMD_ARG_HELP[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-help", 
-        "\t Displays all the options of the RTI_XMLOutputUtility", 
+        "\t Displays all the options of the RTIXMLOutputUtility", 
         ""};
 const char *RTI_CMD_ARG_QOS_FILE[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-qosFile", 
@@ -54,10 +54,10 @@ const char *RTI_CMD_ARG_TOPIC_NAME[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
 
 void RTI_CommandLineArgumentParser_print_help() 
 {
-    printf("RTI_XMLOutputUtility - A tool to visualize the final XML values provided by a Qos Profile \n" 
+    printf("RTIXMLOutputUtility - A tool to visualize the final XML values provided by a Qos Profile \n" 
             "(c) 2019 Copyright, Real-Time Innovations, Inc \n\n");
     printf("Usage: %s [-OPTION] [VALUE] \n\n", 
-            "[./]RTI_XMLOutputUtility[.exe]");
+            "[./]RTIXMLOutputUtility[.exe]");
     printf("Options: \n");
     printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_QOS_FILE[0], RTI_CMD_ARG_QOS_FILE[1], RTI_CMD_ARG_QOS_FILE[2]);
     printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_OUTPUT_FILE[0], RTI_CMD_ARG_OUTPUT_FILE[1], RTI_CMD_ARG_OUTPUT_FILE[2]);
@@ -67,11 +67,14 @@ void RTI_CommandLineArgumentParser_print_help()
     printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_HELP[0], RTI_CMD_ARG_HELP[1], RTI_CMD_ARG_HELP[2]);
 }
 
-int RTI_CommandLineArgumentParser_is_value(char *option_name, char *value) 
+int RTI_CommandLineArgumentParser_has_value(int argc, char *argv[], int index) 
 {
-    if (value == NULL || value[0] == '-') {
-        printf("No value provided for the option '%s'! \n", option_name);
+    if (index + 1 >= argc) {
         return 0;
+    } else {
+        if (argv[index + 1] == NULL || argv[index + 1][0] == '-') {
+            return 0;
+        }
     }
     return 1;
 }
@@ -183,19 +186,23 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             RTI_CommandLineArgumentParser_print_help();
             goto done;
         } else if (!strcmp(argv[i], RTI_CMD_ARG_QOS_FILE[0])) {
-            if (RTI_CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
+            if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->qos_file = argv[i + 1];
             } else {
+                printf("No value provided for '%s' option! \n", 
+                        RTI_CMD_ARG_QOS_FILE[0]);
                 goto done;
             }
         } else if (strcmp(argv[i], RTI_CMD_ARG_OUTPUT_FILE[0]) == 0) {
-            if (RTI_CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
+            if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->output_file = argv[i + 1];
             } else {
+                printf("No value provided for '%s' option! \n", 
+                        RTI_CMD_ARG_OUTPUT_FILE[0]);
                 goto done;
             }
         } else if (strcmp(argv[i], RTI_CMD_ARG_PROFILE_PATH[0]) == 0) {
-            if (RTI_CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
+            if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 char *token = NULL;
                 size_t string_size = 0;
 
@@ -235,10 +242,12 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                     goto done;
                 }
             } else {
+                printf("No value provided for '%s' option! \n", 
+                        RTI_CMD_ARG_PROFILE_PATH[0]);
                 goto done;
             }
         } else if (strcmp(argv[i], RTI_CMD_ARG_QOS_TAG[0]) == 0) {
-            if (RTI_CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
+            if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 char *token = NULL;
                 size_t string_size = 0;
 
@@ -282,17 +291,23 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                     strcpy(output_values->qos_type, argv[i + 1]);
                 }
             } else {
+                printf("No value provided for '%s' option! \n", 
+                        RTI_CMD_ARG_QOS_TAG[0]);
                 goto done;
             }
         } else if (strcmp(argv[i], RTI_CMD_ARG_TOPIC_NAME[0]) == 0) {
-            if (RTI_CommandLineArgumentParser_is_value(argv[i], argv[i + 1])) {
+            if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->topic_name = argv[i + 1];
             } else {
+                printf("No value provided for '%s' option! \n", 
+                        RTI_CMD_ARG_TOPIC_NAME[0]);
                 goto done;
             }
         } else {
-            printf("Unknown option '%s'. Please run RTI_XMLOutputUtility with the -help option "
-                    "to see the valid list of options. \n\n", argv[i]);
+            printf("Unknown option '%s'. Please run RTIXMLOutputUtility with the %s option "
+                    "to see the valid list of options. \n\n", 
+                    argv[i], 
+                    RTI_CMD_ARG_HELP[0]);
             goto done;
         }
         i += 2;
