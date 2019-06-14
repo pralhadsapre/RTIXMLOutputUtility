@@ -189,7 +189,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->qos_file = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n", 
+                printf("No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_QOS_FILE[0]);
                 goto done;
             }
@@ -197,7 +197,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->output_file = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n", 
+                printf("No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_OUTPUT_FILE[0]);
                 goto done;
             }
@@ -242,7 +242,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                     goto done;
                 }
             } else {
-                printf("No value provided for '%s' option! \n", 
+                printf("No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_PROFILE_PATH[0]);
                 goto done;
             }
@@ -291,7 +291,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                     strcpy(output_values->qos_type, argv[i + 1]);
                 }
             } else {
-                printf("No value provided for '%s' option! \n", 
+                printf("No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_QOS_TAG[0]);
                 goto done;
             }
@@ -299,7 +299,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->topic_name = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n", 
+                printf("No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_TOPIC_NAME[0]);
                 goto done;
             }
