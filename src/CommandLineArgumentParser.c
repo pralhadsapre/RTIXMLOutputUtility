@@ -37,7 +37,7 @@ const char *RTI_CMD_ARG_PROFILE_PATH[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "\n\t\t OR the default values will be returned for the -qosTag"};
 const char *RTI_CMD_ARG_QOS_TAG[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-qosTag", 
-        "The XML tag name who QoS values you want to be fetched"
+        "The XML tag name whose QoS values you want to be fetched"
         "\n\t\t You can also select a subtag by separating it with a '/'"
         "\n\t\t e.g. datawriter_qos/history or participant_qos/property", 
         "REQUIRED: Allowed values = " 
