@@ -11,7 +11,7 @@
 
 
 cmake_minimum_required(VERSION 3.5)
-project ("RTI XML Value Output Utility")
+project("RTIXMLOutputUtility")
 
 if(NOT CONNEXTDDS_DIR)
     set(msg "Please provide the top level folder location for your Connext DDS installation. "
