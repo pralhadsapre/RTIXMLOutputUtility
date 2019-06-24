@@ -62,6 +62,88 @@ Here is a sample usage of the utility on a Linux machine
 $ ./RTIXMLOutputUtility 
     -qosFile '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml'
     -profilePath Data_Library::Data_Profile 
-    -outputFile Dummy.txt 
     -qosTag participant_qos/property
 ```
+Here is the sample output for this command
+```
+The parsed arguments are: 
+-qosFile 	    '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml' 
+-outputFile     '' 
+-profilePath 	'Data_Library'::'Data_Profile' 
+-qosTag 	    'participant_qos'/'property' 
+-topicName 	    '' 
+QoS file names detected are: 
+1. file:///home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml 
+2. file:///home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml 
+<property>
+    <value>
+        <element>
+            <name>dds.sys_info.hostname</name>
+            <value>xxx-VirtualBox</value>
+        </element>
+        <element>
+            <name>dds.sys_info.process_id</name>
+            <value>5150</value>
+        </element>
+        <element>
+            <name>dds.sys_info.username</name>
+            <value>xxx</value>
+        </element>
+        <element>
+            <name>dds.sys_info.executable_filepath</name>
+            <value>/home/xxx/Documents/Tests/RTI_XMLOutputUtility/build/RTIXMLOutputUtility</value>
+        </element>
+        <element>
+            <name>dds.sys_info.target</name>
+            <value>x64Linux3gcc5.4.0</value>
+        </element>
+        <element>
+            <name>dds.sys_info.creation_timestamp</name>
+            <value>2019-06-17 10:46:02Z</value>
+        </element>
+        <element>
+            <name>dds.sys_info.execution_timestamp</name>
+            <value>2019-06-24 11:49:29Z</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv4.builtin.parent.message_size_max</name>
+            <value>65507</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv4.builtin.send_socket_buffer_size</name>
+            <value>131072</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv4.builtin.recv_socket_buffer_size</name>
+            <value>131072</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv6.builtin.parent.message_size_max</name>
+            <value>65507</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv6.builtin.send_socket_buffer_size</name>
+            <value>131072</value>
+        </element>
+        <element>
+            <name>dds.transport.UDPv6.builtin.recv_socket_buffer_size</name>
+            <value>131072</value>
+        </element>
+        <element>
+            <name>dds.transport.shmem.builtin.parent.message_size_max</name>
+            <value>65536</value>
+        </element>
+        <element>
+            <name>dds.transport.shmem.builtin.receive_buffer_size</name>
+            <value>1048576</value>
+        </element>
+        <element>
+            <name>dds.transport.shmem.builtin.received_message_count_max</name>
+            <value>64</value>
+        </element>
+    </value>
+</property>
+```
+
+## QoS Profile Inheritance and Composition Guidance
+QoS Profile Inheritance and Composition Guidance is a best practice we recommend when organizing your XML QoS Profiles using the mechanisms of single and multiple inheritance. For more information about this please refer to this [knowledge base article.](https://community.rti.com/best-practices/qos-profile-inheritance-and-composition-guidance "QoS Profile Inheritance and Composition Guidance")
